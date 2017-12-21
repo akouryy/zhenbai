@@ -1,0 +1,49 @@
+:root {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+
+#card-area-container {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#card-area {
+    font-size: 70px;
+    text-align: center;
+}
+
+.tone-0 { color: #999; }
+.tone-1 { color: #f33; }
+.tone-2 { color: #3f6; }
+.tone-3 { color: #990; }
+.tone-4 { color: #36f; }
+
+
+#control-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+}
+
+#control-container button {
+    font-size: 50px;
+    padding: 10px;
+    margin: 0 10px;
+    min-width: 100px;
+    border-radius: 10px;
+}
