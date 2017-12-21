@@ -1,3 +1,7 @@
+/cards/Uni2Pinyin
+
+### customize end ###
+
 *.rbc
 capybara-*.html
 .rspec
