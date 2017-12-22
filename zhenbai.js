@@ -105,6 +105,7 @@ jQuery($ => {
         n.times(i => {
             const r = Math.floor(Math.random() * (n - i)) + i;
             [words[i], words[r]] = [words[r], words[i]];
+            [anss[i], anss[r]] = [anss[r], anss[i]];
         });
         wi = 0;
         updateView();
