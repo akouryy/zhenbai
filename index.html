@@ -3,17 +3,22 @@
 <head>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="zhenbai.css">
+    <title>zhenbai</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="util.js"></script>
     <script src="zhenbai.js"></script>
 </head>
 <body>
-    <div id="card-area-container">
-        <main id="card-area">你好 Nǐ hǎo</main>
-    </div>
-    <div id="control-container">
-        <button id="prev-word">前の語</button>
-        <button id="next-page">裏</button>
-        <button id="next-word">次の語</button>
+    <div id="container">
+        <div class="card" id="card-w0">你好</div>
+        <div class="card" id="card-w1">Nǐ hǎo</div>
+        <div class="card" id="card-w2"></div>
+        <div id="control-container">
+            <button id="prev-word">前</button>
+            <button id="next-page">裏</button>
+            <button id="next-word">次</button>
+        </div>
     </div>
 </body>
 </html>
