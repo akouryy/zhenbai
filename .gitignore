@@ -1,4 +1,6 @@
 /cards/Uni2Pinyin
+/cards/*.txt
+/cards/*.js
 
 ### customize end ###
 

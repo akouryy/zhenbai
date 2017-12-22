@@ -55,6 +55,7 @@ function ansWord(w) {
 document.write(`<script src="cards/${location.hash.substr(1)}.js"></script>`);
 jQuery($ => {
     const $w = ShowFormats[0].length.times(i => $(`#card-w${i}`));
+    const $dictLink = $('#dict-link');
     const words = window.words;
     const anss = words.map(ansWord);
     let wi = 0, wj = 0;
@@ -78,6 +79,7 @@ jQuery($ => {
                 Math.min(1, $(window).width() / $w[wk].width())
             })`);
         });
+        $dictLink.data('url', `https://cjjc.weblio.jp/content/${words[wi][0]}`);
     }
 
     updateView();
@@ -111,8 +113,16 @@ jQuery($ => {
         updateView();
     });
 
+
     let autoPlayTimer = null;
     const $autoPlay = $('#auto-play');
+
+    function stopAutoPlay() {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        $autoPlay.text("自動");
+    }
+
     $autoPlay.click(() => {
         if(autoPlayTimer === null) {
             autoPlayTimer = setInterval(() => {
@@ -125,9 +135,12 @@ jQuery($ => {
             }, 1500);
             $autoPlay.text("停止");
         } else {
-            clearInterval(autoPlayTimer);
-            autoPlayTimer = null;
-            $autoPlay.text("自動");
+            stopAutoPlay();
         }
+    });
+
+    $dictLink.click(() => {
+        window.open($dictLink.data('url'), '_blank');
+        if(autoPlayTimer !== null) stopAutoPlay();
     });
 });
