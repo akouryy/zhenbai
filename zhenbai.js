@@ -68,6 +68,9 @@ jQuery($ => {
                 $w[wk].html(anss[wi][wk]);
                 break;
             }
+            $w[wk].css('transform', `scale(${
+                Math.min(1, $(window).width() / $w[wk].width())
+            })`);
         });
     }
 
@@ -89,5 +92,16 @@ jQuery($ => {
         wj++;
         if(wj == ShowFormats.length) wj = 0;
         updateView();
+    });
+
+    $('#auto-play').click(() => {
+        const t = setInterval(() => {
+            wi++;
+            if(wi == words.length) {
+                wi = wj = 0;
+                clearInterval(t);
+            }
+            updateView();
+        }, 1500);
     });
 });

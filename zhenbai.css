@@ -29,8 +29,8 @@ body {
     flex-grow: 1;
     font-size: 70px;
     text-align: center;
-    max-width: 100vw;
     overflow-x: auto;
+    white-space: nowrap;
 }
 
 .tone-0 { color: #999; }
@@ -40,19 +40,24 @@ body {
 .tone-4 { color: #36f; }
 
 
-#control-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+.control-container {
     display: flex;
     justify-content: center;
 }
 
-#control-container button {
-    font-size: 30px;
-    padding: 10px;
-    margin: 0 10px;
+.control-container button {
     min-width: 100px;
     border-radius: 10px;
+}
+
+#big-control-container button {
+    padding: 10px;
+    margin: 0 10px;
+    font-size: 30px;
+}
+
+#small-control-container button {
+    padding: 5px;
+    margin: 5px2 5px 0;
+    font-size: 15px;
 }
