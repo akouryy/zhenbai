@@ -7,9 +7,9 @@ Number.prototype.times = function(f) {
 };
 
 String.prototype.scan = function(re) {
-    if (!re.global) throw "re must be /g.";
+    if (!re.global) throw new Error("re must be /g.");
     let m, r = [];
-    while(m = re.exec(this)) {
+    while((m = re.exec(this))) {
         m.shift();
         r.push(m);
     }

@@ -15,7 +15,7 @@ const WithTone = {
 const HIDE = 0, SHOW = 1, ANS = 2;
 const ShowFormats = [
     [SHOW, HIDE],
-    [ANS,  ANS],
+    [ANS, ANS],
 ];
 
 function ansWord(w) {
@@ -23,12 +23,12 @@ function ansWord(w) {
     const ms = w[1].scan(/([a-z]+)([0-5])(\/)?/g);
     ms.length.times(i => {
         const w0 = w[0][i], w1 = Array.from(ms[i][0]),
-              tone = ms[i][1], slash = ms[i][2];
+            tone = ms[i][1], slash = ms[i][2];
 
         let toneAdded = false;
         for(const vw of 'aeo') {
             const i = w1.indexOf(vw);
-            if(i != -1) {
+            if(i !== -1) {
                 w1[i] = WithTone[vw][tone];
                 toneAdded = true;
                 break;
@@ -71,6 +71,8 @@ jQuery($ => {
             case ANS:
                 $w[wk].html(anss[wi][wk]);
                 break;
+            default:
+                throw new Error(`unreachable case: ${ShowFormats[wj][wk]}`);
             }
             $w[wk].css('transform', `scale(${
                 Math.min(1, $(window).width() / $w[wk].width())
@@ -82,19 +84,19 @@ jQuery($ => {
 
     $('#next-word').click(() => {
         wi++;
-        if(wi == words.length) wi = 0;
+        if(wi === words.length) wi = 0;
         wj = 0;
         updateView();
     });
     $('#prev-word').click(() => {
         wi--;
-        if(wi == -1) wi = words.length - 1;
+        if(wi === -1) wi = words.length - 1;
         wj = 0;
         updateView();
     });
     $('#next-page').click(() => {
         wj++;
-        if(wj == ShowFormats.length) wj = 0;
+        if(wj === ShowFormats.length) wj = 0;
         updateView();
     });
 
@@ -104,7 +106,6 @@ jQuery($ => {
             const r = Math.floor(Math.random() * (n - i)) + i;
             [words[i], words[r]] = [words[r], words[i]];
         });
-        console.log(words);
         wi = 0;
         updateView();
     });
@@ -115,9 +116,9 @@ jQuery($ => {
         if(autoPlayTimer === null) {
             autoPlayTimer = setInterval(() => {
                 wi++;
-                if(wi == words.length) {
+                if(wi === words.length) {
                     wi = wj = 0;
-                    clearInterval(t);
+                    clearInterval(autoPlayTimer);
                 }
                 updateView();
             }, 1500);
