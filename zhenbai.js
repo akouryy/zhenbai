@@ -14,12 +14,12 @@ const WithTone = {
 
 const HIDE = 0, SHOW = 1, ANS = 2;
 const ShowFormats = [
-    [SHOW, HIDE],
-    [ANS, ANS],
+    [SHOW, HIDE, HIDE],
+    [ANS, ANS, ANS],
 ];
 
 function ansWord(w) {
-    let ans = ["", ""];
+    let ans = ["", "", w[2]];
     const ms = w[1].scan(/([a-z]+)([0-5])(\/)?/g);
     ms.length.times(i => {
         const w0 = w[0][i], w1 = Array.from(ms[i][0]),
