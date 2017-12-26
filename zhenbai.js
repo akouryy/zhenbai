@@ -21,8 +21,9 @@ const ShowFormats = [
 function ansWord(w) {
     let ans = ["", "", w[2]];
     const ms = w[1].scan(/([a-z]+)([0-5])(\/)?/g);
+    let j = 0;
     ms.length.times(i => {
-        const w0 = w[0][i], w1 = Array.from(ms[i][0]),
+        const w0 = w[0][j], w1 = Array.from(ms[i][0]),
             tone = ms[i][1], slash = ms[i][2];
 
         let toneAdded = false;
@@ -48,17 +49,54 @@ function ansWord(w) {
         }
         ans[1] += `<span class="tone-${tone}">${w1.join('')}</span>`;
         if(slash) ans[1] += '/';
+
+        for(j++; ['〜', '～'].includes(w[0][j]); j++) {
+            ans[0] += w[0][j];
+        }
     });
     return ans;
 }
 
-document.write(`<script src="cards/${location.hash.substr(1)}.js"></script>`);
+document.write(`
+    <script src="cards/${location.hash.substr(1)}.js" charset="utf-8"></script>
+`);
+
+function buttonActions($b, short, long, threshold = 1000) {
+    let touching = false, long_touch = false;
+    $b.on({
+        'touchstart mousedown': e => {
+            if(!touching) {
+                touching = true;
+                long_touch = false;
+                $b.longTimeout = setTimeout(() => {
+                    long_touch = true;
+                    long();
+                }, threshold);
+            }
+            e.preventDefault();
+        },
+        'touchend mouseup mouseout': e => {
+            if(touching && !long_touch) short();
+            touching = false;
+            clearInterval($b.longTimeout);
+            e.preventDefault();
+        }
+    });
+}
+
 jQuery($ => {
     const $w = ShowFormats[0].length.times(i => $(`#card-w${i}`));
     const $dictLink = $('#dict-link');
     const words = window.words;
     const anss = words.map(ansWord);
     let wi = 0, wj = 0;
+
+    function changeWord(dwi, resetWj = true) {
+        wi = (wi + dwi) % words.length;
+        if(wi < 0) wi += words.length;
+        if(resetWj) wj = 0;
+        updateView();
+    }
 
     function updateView() {
         ShowFormats[wj].length.times(wk => {
@@ -84,18 +122,8 @@ jQuery($ => {
 
     updateView();
 
-    $('#next-word').click(() => {
-        wi++;
-        if(wi === words.length) wi = 0;
-        wj = 0;
-        updateView();
-    });
-    $('#prev-word').click(() => {
-        wi--;
-        if(wi === -1) wi = words.length - 1;
-        wj = 0;
-        updateView();
-    });
+    buttonActions($('#next-word'), _ => changeWord(1),  _ => changeWord(10));
+    buttonActions($('#prev-word'), _ => changeWord(-1), _ => changeWord(-10));
     $('#next-page').click(() => {
         wj++;
         if(wj === ShowFormats.length) wj = 0;
@@ -126,12 +154,8 @@ jQuery($ => {
     $autoPlay.click(() => {
         if(autoPlayTimer === null) {
             autoPlayTimer = setInterval(() => {
-                wi++;
-                if(wi === words.length) {
-                    wi = wj = 0;
-                    clearInterval(autoPlayTimer);
-                }
-                updateView();
+                changeWord(1, false);
+                if(wi === 0) stopAutoPlay();
             }, 1500);
             $autoPlay.text("停止");
         } else {

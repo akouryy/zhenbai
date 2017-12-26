@@ -52,6 +52,7 @@ body {
 .control-container button {
     min-width: 100px;
     border-radius: 10px;
+    user-select: none;
 }
 
 #big-control-container button {

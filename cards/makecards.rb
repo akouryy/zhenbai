@@ -22,7 +22,11 @@ words.map! do |w|
     w.chars.map do |c|
       t = Table[c]
       if !t or t.empty?
-        raise "unknown character: '#{c}'"
+        if %w(〜 ～).include? c
+          c
+        else
+          raise "unknown character: '#{c}'"
+        end
       elsif t.size == 1
         t[0]
       else
@@ -39,4 +43,4 @@ words.map! do |w|
   ]
 end
 
-File.write outf, 'window.words = [' + words.join + '];'
+File.write outf, "window.words = [\n" + words.join + '];'
