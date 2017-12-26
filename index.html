@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <script crossorigin="anonymous" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="util.js" charset="utf-8"></script>
+    <script src="settings.js" charset="utf-8"></script>
     <script src="zhenbai.js" charset="utf-8"></script>
 </head>
 <body>
@@ -23,7 +24,21 @@
             <button id="shuffle">混</button>
             <button id="auto-play">自動</button>
             <button id="dict-link" data-url="https://cjjc.weblio.jp/">辞書</button>
+            <button id="open-settings">設定</button>
         </div>
+    </div>
+
+    <div id="settings">
+        <h1>設定</h1>
+        <div id="settings-properties">
+            <div>「前」「次」長押し時: <select id="prev_next_word_longtap">
+                <option value="ten">10個前,後</option>
+                <option value="initial">前,次の頭文字</option>
+            </select></div>
+        </div>
+        <footer>
+            <button id="close-settings">閉じる</button>
+        </footer>
     </div>
 </body>
 </html>

@@ -49,20 +49,47 @@ body {
     justify-content: center;
 }
 
-.control-container button {
-    min-width: 100px;
+button {
+    background: #fff;
     border-radius: 10px;
     user-select: none;
 }
 
-#big-control-container button {
+#big-control-container button,
+button#close-settings {
+    min-width: 100px;
     padding: 10px;
     margin: 0 10px;
     font-size: 30px;
 }
 
 #small-control-container button {
+    min-width: 80px;
     padding: 5px;
-    margin: 5px2 5px 0;
+    margin: 5px 5px 0;
     font-size: 15px;
+}
+
+#settings {
+    display: none;
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
+    padding: 0 1em;
+    background: #eee;
+    z-index: 100;
+}
+
+body.show-settings #settings {
+    display: block;
+}
+
+#settings h1 {
+    text-align: center;
+}
+
+#settings footer {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: center;
 }

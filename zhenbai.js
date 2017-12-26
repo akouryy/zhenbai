@@ -1,4 +1,3 @@
-/* global jQuery:false */
 'use strict';
 
 if(!location.hash) location.hash = "#basic_words";
@@ -11,6 +10,8 @@ const WithTone = {
     o: ['o', 'ō', 'ó', 'ǒ', 'ò'],
     v: ['ü', 'ǖ', 'ǘ', 'ǚ', 'ǜ'],
 };
+
+const $ = window.jQuery;
 
 const HIDE = 0, SHOW = 1, ANS = 2;
 const ShowFormats = [
@@ -84,17 +85,23 @@ function buttonActions($b, short, long, threshold = 1000) {
     });
 }
 
-jQuery($ => {
+$(() => {
     const $w = ShowFormats[0].length.times(i => $(`#card-w${i}`));
     const $dictLink = $('#dict-link');
+    const settings = window.settings;
     const words = window.words;
     const anss = words.map(ansWord);
     let wi = 0, wj = 0;
 
-    function changeWord(dwi, resetWj = true) {
+    function changeWord(dwi, resetWj = true, view = true) {
         wi = (wi + dwi) % words.length;
         if(wi < 0) wi += words.length;
         if(resetWj) wj = 0;
+        if(view) updateView();
+    }
+    function changeWordInitial(dwi) {
+        const c = words[wi][1][0];
+        do { changeWord(dwi, true, false); } while(words[wi][1][0] === c);
         updateView();
     }
 
@@ -122,8 +129,30 @@ jQuery($ => {
 
     updateView();
 
-    buttonActions($('#next-word'), _ => changeWord(1),  _ => changeWord(10));
-    buttonActions($('#prev-word'), _ => changeWord(-1), _ => changeWord(-10));
+    buttonActions($('#next-word'), _ => changeWord(1), _ => {
+        switch(settings.prev_next_word_longtap) {
+        case 'ten':
+            changeWord(10);
+            break;
+        case 'initial':
+            changeWordInitial(1);
+            break;
+        default:
+            throw new Error(`unreachable case: ${settings.prev_next_word_longtap}`);
+        }
+    });
+    buttonActions($('#prev-word'), _ => changeWord(-1), _ => {
+        switch(settings.prev_next_word_longtap) {
+        case 'ten':
+            changeWord(-10);
+            break;
+        case 'initial':
+            changeWordInitial(-1);
+            break;
+        default:
+            throw new Error(`unreachable case: ${settings.prev_next_word_longtap}`);
+        }
+    });
     $('#next-page').click(() => {
         wj++;
         if(wj === ShowFormats.length) wj = 0;
@@ -154,8 +183,12 @@ jQuery($ => {
     $autoPlay.click(() => {
         if(autoPlayTimer === null) {
             autoPlayTimer = setInterval(() => {
-                changeWord(1, false);
-                if(wi === 0) stopAutoPlay();
+                changeWord(1, false, false);
+                if(wi === 0) {
+                    stopAutoPlay();
+                    wj = 0;
+                }
+                updateView();
             }, 1500);
             $autoPlay.text("停止");
         } else {
