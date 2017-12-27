@@ -15,3 +15,7 @@ String.prototype.scan = function(re) {
     }
     return r;
 };
+
+window.jQuery.fn.tagName = function() {
+    return this.prop("tagName").toLowerCase();
+};

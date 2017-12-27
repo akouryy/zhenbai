@@ -10,6 +10,7 @@ const WithTone = {
     o: ['o', 'ō', 'ó', 'ǒ', 'ò'],
     v: ['ü', 'ǖ', 'ǘ', 'ǚ', 'ǜ'],
 };
+const AllowedChars = ['〜', '～'];
 
 const $ = window.jQuery;
 
@@ -23,6 +24,10 @@ function ansWord(w) {
     let ans = ["", "", w[2]];
     const ms = w[1].scan(/([a-z]+)([0-5])(\/)?/g);
     let j = 0;
+    for(; AllowedChars.includes(w[0][j]); j++) {
+        ans[0] += w[0][j];
+    }
+
     ms.length.times(i => {
         const w0 = w[0][j], w1 = Array.from(ms[i][0]),
             tone = ms[i][1], slash = ms[i][2];
@@ -51,7 +56,7 @@ function ansWord(w) {
         ans[1] += `<span class="tone-${tone}">${w1.join('')}</span>`;
         if(slash) ans[1] += '/';
 
-        for(j++; ['〜', '～'].includes(w[0][j]); j++) {
+        for(j++; AllowedChars.includes(w[0][j]); j++) {
             ans[0] += w[0][j];
         }
     });
@@ -123,6 +128,9 @@ $(() => {
             $w[wk].css('transform', `scale(${
                 Math.min(1, $(window).width() / $w[wk].width())
             })`);
+        });
+        (5).times(i => {
+            $(`.tone-${i}`).css('color', settings[`tone${i}_color`]);
         });
         $dictLink.data('url', `https://cjjc.weblio.jp/content/${words[wi][0]}`);
     }
