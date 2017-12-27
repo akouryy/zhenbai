@@ -12,6 +12,7 @@ const LSPrefix = 'zhenbai_';
 
     const defaults = {
         prev_next_word_longtap: 'ten',
+        prev_next_word_page: 'reset',
     };
 
     if(window.settings === void 0) window.settings = {};

@@ -96,7 +96,7 @@ $(() => {
     function changeWord(dwi, resetWj = true, view = true) {
         wi = (wi + dwi) % words.length;
         if(wi < 0) wi += words.length;
-        if(resetWj) wj = 0;
+        if(resetWj && settings.prev_next_word_page === 'reset') wj = 0;
         if(view) updateView();
     }
     function changeWordInitial(dwi) {
