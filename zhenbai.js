@@ -2,7 +2,7 @@
 eslint no-restricted-syntax: ["error",
   "BinaryExpression[operator='in']",
   "ForInStatement",
-  "WithStatement",
+  "SequenceExpression",
   "VariableDeclaration[kind='var']",
   "MemberExpression[computed='true']>Identifier.property[name=/^w[ij]$/]",
   "BinaryExpression>Identifier.left[name=/^w[ij]$/]",
@@ -61,9 +61,9 @@ function ansWord(w) {
           slash = ms[i][MS_SEP];
 
     for(const reg of ToneVowelRegexps) {
-      const i = w1.search(reg);
-      if(i !== -1) {
-        w1Arr[i] = WithTone.get(w1[i])[tone];
+      const k = w1.search(reg);
+      if(k !== -1) {
+        w1Arr[k] = WithTone.get(w1[k])[tone];
         break;
       }
     }

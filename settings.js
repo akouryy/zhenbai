@@ -6,6 +6,33 @@ const $ = jQuery;
 const LSPrefix = `zhenbai_`;
 const ColorRegexp = yun.frozen(/^#[0-9a-fA-F]{6}$/);
 
+const defaults = yun.frozen(new Map([
+  [`pn_word_longtap`, `ten`],
+  [`pn_word_page`, `reset`],
+  [`tone0_color`, `#999999`],
+  [`tone1_color`, `#ff3333`],
+  [`tone2_color`, `#33ff66`],
+  [`tone3_color`, `#999900`],
+  [`tone4_color`, `#3366ff`],
+  [`r_highlight`, false],
+]));
+
+if(window.settings === undefined) window.settings = {};
+const settings = yun.unfrozen(window.settings);
+settings.events = {};
+
+settings.onChange = function onChange(k, f) {
+  settings.events[k] = settings.events[k] || [];
+  settings.events[k].push(f);
+};
+
+function updateSettings(k, v, {updateForm = false} = {}) {
+  settings[k] = v;
+  localStorage.setItem(LSPrefix + k, v);
+  if(updateForm) $(`#${k}`).val(v);
+  if(settings.events[k]) for(const f of settings.events[k]) f(v);
+}
+
 $(() => {
   $(`#open-settings`).click(_ => $(`body`).addClass(`show-settings`));
   $(`#close-settings`).click(_ => $(`body`).removeClass(`show-settings`));
@@ -18,39 +45,12 @@ $(() => {
   });
 });
 
-const defaults = yun.frozen(new Map([
-  [`pn_word_longtap`, `ten`],
-  [`pn_word_page`, `reset`],
-  [`tone0_color`, `#999999`],
-  [`tone1_color`, `#ff3333`],
-  [`tone2_color`, `#33ff66`],
-  [`tone3_color`, `#999900`],
-  [`tone4_color`, `#3366ff`],
-  [`r_highlight`, false],
-]));
-
-if(window.settings === void 0) window.settings = {};
-const settings = yun.unfrozen(window.settings);
-settings.events = {};
-
-settings.onChange = function onChange(k, f) {
-  settings.events[k] = settings.events[k] || [];
-  settings.events[k].push(f);
-};
-
-function updateSettings(k, v, {updateForm = false} = {}) {
-  settings[k] = v;
-  localStorage.setItem(LSPrefix + k, v);
-  if(updateForm) $(`#` + k).val(v);
-  if(settings.events[k]) for(const f of settings.events[k]) f(v);
-}
-
 for(const [k, df] of defaults) {
   settings[k] = localStorage.getItem(LSPrefix + k);
   if(!settings[k]) settings[k] = df;
 
   $(() => {
-    const $s = $(`#` + k);
+    const $s = $(`#${k}`);
     switch($s.tagName()) {
     case `select`:
       $s.val(settings[k]);

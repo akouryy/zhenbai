@@ -54,17 +54,17 @@ window.NoCaseError = class NoCaseError extends Error {
 };
 
 window.yun = {
-  frozen: x => {
+  frozen(x) {
     Object.freeze(x);
     return x;
   },
 
-  unfrozen: x => {
+  unfrozen(x) {
     if(Object.isFrozen(x)) throw new Error(`frozen value: ${x}`);
     return x;
   },
 
-  dig: (obj, ...props) => {
+  dig(obj, ...props) {
     let o = obj;
     for(const p of props) {
       if(o && o[p]) o = o[p];
