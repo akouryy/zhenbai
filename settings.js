@@ -1,10 +1,10 @@
 'use strict';
 
-(({jQuery, NoCaseError, frozen, unfrozen}) => {
+(({jQuery, NoCaseError, yun}) => {
 const $ = jQuery;
 
 const LSPrefix = `zhenbai_`;
-const ColorRegexp = frozen(/^#[0-9a-fA-F]{6}$/);
+const ColorRegexp = yun.frozen(/^#[0-9a-fA-F]{6}$/);
 
 $(() => {
   $(`#open-settings`).click(_ => $(`body`).addClass(`show-settings`));
@@ -18,7 +18,7 @@ $(() => {
   });
 });
 
-const defaults = frozen(new Map([
+const defaults = yun.frozen(new Map([
   [`pn_word_longtap`, `ten`],
   [`pn_word_page`, `reset`],
   [`tone0_color`, `#999999`],
@@ -26,15 +26,23 @@ const defaults = frozen(new Map([
   [`tone2_color`, `#33ff66`],
   [`tone3_color`, `#999900`],
   [`tone4_color`, `#3366ff`],
+  [`r_highlight`, false],
 ]));
 
 if(window.settings === void 0) window.settings = {};
-const settings = unfrozen(window.settings);
+const settings = yun.unfrozen(window.settings);
+settings.events = {};
+
+settings.onChange = function onChange(k, f) {
+  settings.events[k] = settings.events[k] || [];
+  settings.events[k].push(f);
+};
 
 function updateSettings(k, v, {updateForm = false} = {}) {
   settings[k] = v;
   localStorage.setItem(LSPrefix + k, v);
   if(updateForm) $(`#` + k).val(v);
+  if(settings.events[k]) for(const f of settings.events[k]) f(v);
 }
 
 for(const [k, df] of defaults) {
@@ -50,6 +58,14 @@ for(const [k, df] of defaults) {
       break;
     case `input`:
       switch($s.attr(`type`)) {
+      case `checkbox`:
+        if(typeof settings[k] === `string`)
+          settings[k] = settings[k] !== `false`;
+        $s.prop(`checked`, settings[k]);
+        $s.change(_ => {
+          updateSettings(k, $s.prop(`checked`));
+        });
+        break;
       case `color`:
         if(!ColorRegexp.test(settings[k])) {
           throw new Error(`Invalid settings: ${k}: ${settings[k]}`);

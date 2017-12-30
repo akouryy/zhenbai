@@ -43,6 +43,10 @@ body {
 .tone-3 { color: #990; }
 .tone-4 { color: #36f; }
 
+body.r-highlight .fayin-r {
+    text-shadow: 0px 0px 5px #000;
+}
+
 
 .control-container {
     display: flex;

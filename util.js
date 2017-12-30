@@ -25,24 +25,22 @@ window.jQuery.fn.buttonActions = function buttonActions({
 }) {
   let touching = false;
   let long_touch = false;
-  this.on({
-    'touchstart mousedown': e => {
-      if(!touching) {
-        touching = true;
-        long_touch = false;
-        this.longTimeout = setTimeout(() => {
-          long_touch = true;
-          long();
-        }, threshold);
-      }
-      e.preventDefault();
-    },
-    'touchend mouseup mouseout': e => {
-      if(touching && !long_touch) short();
-      touching = false;
-      clearTimeout(this.longTimeout);
-      e.preventDefault();
-    },
+  this.on(`touchstart mousedown`, e => {
+    if(!touching) {
+      touching = true;
+      long_touch = false;
+      this.longTimeout = setTimeout(() => {
+        long_touch = true;
+        long();
+      }, threshold);
+    }
+    e.preventDefault();
+  });
+  this.on(`touchend mouseup mouseout`, e => {
+    if(touching && !long_touch) short();
+    touching = false;
+    clearTimeout(this.longTimeout);
+    e.preventDefault();
   });
 };
 
@@ -55,14 +53,28 @@ window.NoCaseError = class NoCaseError extends Error {
   }
 };
 
-window.frozen = x => {
-  Object.freeze(x);
-  return x;
+window.yun = {
+  frozen: x => {
+    Object.freeze(x);
+    return x;
+  },
+
+  unfrozen: x => {
+    if(Object.isFrozen(x)) throw new Error(`frozen value: ${x}`);
+    return x;
+  },
+
+  dig: (obj, ...props) => {
+    let o = obj;
+    for(const p of props) {
+      if(o && o[p]) o = o[p];
+    }
+    return o;
+  },
 };
 
-window.unfrozen = x => {
-  if(Object.isFrozen(x)) throw new Error(`frozen value: ${x}`);
-  return x;
+Object.prototype.dig = function dig(...props) {
+  return window.yun.dig(this, ...props);
 };
 
 window.MInt = class MInt {
